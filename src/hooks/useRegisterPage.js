@@ -22,8 +22,7 @@ function useRegisterPage() {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const onRegister = async () => {
     if (password.length < 6) {
       setErrorPassword('Password minimal 6 karakter.');
       return;
@@ -31,18 +30,25 @@ function useRegisterPage() {
     setErrorPassword('');
     setIsLoading(true);
 
-    const result = await dispatch(asyncRegisterUser({ name, email, password }));
-    setIsLoading(false);
-
-    if (result && !result.error) {
-      dispatch(
-        asyncShowNotification({
-          message: 'Registrasi akun berhasil! Silakan masuk menggunakan akun baru Anda.',
-          type: 'success',
-        })
-      );
-      navigate('/login');
+    try {
+      const result = await dispatch(asyncRegisterUser({ name, email, password }));
+      if (result && !result.error) {
+        dispatch(
+          asyncShowNotification({
+            message: 'Registrasi akun berhasil! Silakan masuk menggunakan akun baru Anda.',
+            type: 'success',
+          })
+        );
+        navigate('/login');
+      }
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onRegister();
   };
 
   const submitButtonText = isLoading ? 'Mendaftarkan Akun...' : 'Daftar Sekarang';
@@ -58,6 +64,7 @@ function useRegisterPage() {
     isLoading,
     submitButtonText,
     handleSubmit,
+    onRegister,
   };
 }
 

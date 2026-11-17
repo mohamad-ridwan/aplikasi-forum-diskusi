@@ -14,23 +14,30 @@ function useNewThreadPage() {
   const [body, handleBodyChange] = useInput('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const onAddThread = async () => {
     if (!title.trim() || !body.trim()) return;
 
     setIsLoading(true);
-    const result = await dispatch(
-      asyncAddThread({
-        title,
-        body,
-        category: category.trim(),
-      })
-    );
-    setIsLoading(false);
+    try {
+      const result = await dispatch(
+        asyncAddThread({
+          title,
+          body,
+          category: category.trim(),
+        })
+      );
 
-    if (result && !result.error) {
-      navigate('/');
+      if (result && !result.error) {
+        navigate('/');
+      }
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onAddThread();
   };
 
   const handleCancel = () => {
@@ -53,6 +60,7 @@ function useNewThreadPage() {
     submitButtonText,
     handleSubmit,
     handleCancel,
+    onAddThread,
   };
 }
 
