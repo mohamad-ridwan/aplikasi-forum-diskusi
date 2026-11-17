@@ -1,5 +1,6 @@
 import { hideLoading, showLoading } from 'react-redux-loading-bar';
 import api from '../../utils/api';
+import { asyncShowNotification } from '../notification/action';
 
 const ActionType = {
   RECEIVE_DETAIL_THREAD: 'RECEIVE_DETAIL_THREAD',
@@ -85,7 +86,7 @@ function asyncReceiveDetailThread(threadId) {
       const detailThread = await api.getDetailThread(threadId);
       dispatch(receiveDetailThreadActionCreator(detailThread));
     } catch (error) {
-      alert(error.message);
+      dispatch(asyncShowNotification({ message: error.message, type: 'error' }));
     } finally {
       dispatch(hideLoading());
     }
@@ -98,9 +99,15 @@ function asyncAddComment({ threadId, content }) {
     try {
       const comment = await api.createComment({ threadId, content });
       dispatch(addCommentActionCreator(comment));
+      dispatch(
+        asyncShowNotification({
+          message: 'Komentar Anda berhasil dikirimkan!',
+          type: 'success',
+        })
+      );
       return { error: false };
     } catch (error) {
-      alert(error.message);
+      dispatch(asyncShowNotification({ message: error.message, type: 'error' }));
       return { error: true, message: error.message };
     } finally {
       dispatch(hideLoading());
@@ -112,7 +119,12 @@ function asyncToggleVoteDetailThread(voteType) {
   return async (dispatch, getState) => {
     const { authUser, detailThread } = getState();
     if (!authUser) {
-      alert('Silakan login terlebih dahulu untuk memberikan vote');
+      dispatch(
+        asyncShowNotification({
+          message: 'Silakan masuk (login) terlebih dahulu untuk memberikan suara pada diskusi.',
+          type: 'warning',
+        })
+      );
       return;
     }
     if (!detailThread) return;
@@ -136,7 +148,12 @@ function asyncToggleVoteDetailThread(voteType) {
         await api.neutralVoteThread(detailThread.id);
       }
     } catch (error) {
-      alert(error.message);
+      dispatch(
+        asyncShowNotification({
+          message: `Gagal memperbarui vote pada diskusi: ${error.message || 'Terjadi kesalahan server.'}`,
+          type: 'error',
+        })
+      );
       dispatch(
         setDetailThreadVotesActionCreator({
           upVotesBy: previousUpVotesBy,
@@ -151,7 +168,12 @@ function asyncToggleVoteComment({ commentId, voteType }) {
   return async (dispatch, getState) => {
     const { authUser, detailThread } = getState();
     if (!authUser) {
-      alert('Silakan login terlebih dahulu untuk memberikan vote');
+      dispatch(
+        asyncShowNotification({
+          message: 'Silakan masuk (login) terlebih dahulu untuk memberikan suara pada komentar.',
+          type: 'warning',
+        })
+      );
       return;
     }
     if (!detailThread) return;
@@ -179,7 +201,12 @@ function asyncToggleVoteComment({ commentId, voteType }) {
         await api.neutralVoteComment({ threadId: detailThread.id, commentId });
       }
     } catch (error) {
-      alert(error.message);
+      dispatch(
+        asyncShowNotification({
+          message: `Gagal memperbarui vote pada komentar: ${error.message || 'Terjadi kesalahan server.'}`,
+          type: 'error',
+        })
+      );
       dispatch(
         setCommentVotesActionCreator({
           commentId,

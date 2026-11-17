@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { asyncRegisterUser } from '../states/users/action';
+import { asyncShowNotification } from '../states/notification/action';
 import useInput from './useInput';
 
 function useRegisterPage() {
@@ -34,7 +35,12 @@ function useRegisterPage() {
     setIsLoading(false);
 
     if (result && !result.error) {
-      alert('Registrasi akun berhasil! Silakan masuk menggunakan akun baru Anda.');
+      dispatch(
+        asyncShowNotification({
+          message: 'Registrasi akun berhasil! Silakan masuk menggunakan akun baru Anda.',
+          type: 'success',
+        })
+      );
       navigate('/login');
     }
   };

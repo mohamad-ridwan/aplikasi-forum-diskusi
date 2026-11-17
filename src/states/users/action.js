@@ -1,5 +1,6 @@
 import { hideLoading, showLoading } from 'react-redux-loading-bar';
 import api from '../../utils/api';
+import { asyncShowNotification } from '../notification/action';
 
 const ActionType = {
   RECEIVE_USERS: 'RECEIVE_USERS',
@@ -21,7 +22,7 @@ function asyncRegisterUser({ name, email, password }) {
       await api.register({ name, email, password });
       return { error: false };
     } catch (error) {
-      alert(error.message);
+      dispatch(asyncShowNotification({ message: error.message, type: 'error' }));
       return { error: true, message: error.message };
     } finally {
       dispatch(hideLoading());

@@ -7,6 +7,7 @@ import threadsReducer from './threads/reducer';
 import detailThreadReducer from './detailThread/reducer';
 import leaderboardsReducer from './leaderboards/reducer';
 import filterCategoryReducer from './filterCategory/reducer';
+import notificationReducer from './notification/reducer';
 
 const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ const store = configureStore({
     leaderboards: leaderboardsReducer,
     filterCategory: filterCategoryReducer,
     loadingBar: loadingBarReducer,
+    notification: notificationReducer,
   },
 });
 

@@ -1,5 +1,6 @@
 import { hideLoading, showLoading } from 'react-redux-loading-bar';
 import api from '../../utils/api';
+import { asyncShowNotification } from '../notification/action';
 
 const ActionType = {
   RECEIVE_THREADS: 'RECEIVE_THREADS',
@@ -56,7 +57,7 @@ function asyncAddThread({ title, body, category = '' }) {
       dispatch(addThreadActionCreator(thread));
       return { error: false, thread };
     } catch (error) {
-      alert(error.message);
+      dispatch(asyncShowNotification({ message: error.message, type: 'error' }));
       return { error: true, message: error.message };
     } finally {
       dispatch(hideLoading());
@@ -68,7 +69,12 @@ function asyncToggleVoteThread({ threadId, voteType }) {
   return async (dispatch, getState) => {
     const { authUser, threads } = getState();
     if (!authUser) {
-      alert('Silakan login terlebih dahulu untuk memberikan vote');
+      dispatch(
+        asyncShowNotification({
+          message: 'Silakan masuk (login) terlebih dahulu untuk memberikan suara pada diskusi.',
+          type: 'warning',
+        })
+      );
       return;
     }
 
@@ -95,7 +101,12 @@ function asyncToggleVoteThread({ threadId, voteType }) {
         await api.neutralVoteThread(threadId);
       }
     } catch (error) {
-      alert(error.message);
+      dispatch(
+        asyncShowNotification({
+          message: `Gagal memperbarui vote pada diskusi: ${error.message || 'Terjadi kesalahan server.'}`,
+          type: 'error',
+        })
+      );
       dispatch(
         setThreadVotesActionCreator({
           threadId,

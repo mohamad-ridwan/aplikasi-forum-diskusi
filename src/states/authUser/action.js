@@ -1,5 +1,6 @@
 import { hideLoading, showLoading } from 'react-redux-loading-bar';
 import api from '../../utils/api';
+import { asyncShowNotification } from '../notification/action';
 
 const ActionType = {
   SET_AUTH_USER: 'SET_AUTH_USER',
@@ -34,7 +35,7 @@ function asyncSetAuthUser({ email, password }) {
       dispatch(setAuthUserActionCreator(authUser));
       return { error: false };
     } catch (error) {
-      alert(error.message);
+      dispatch(asyncShowNotification({ message: error.message, type: 'error' }));
       return { error: true, message: error.message };
     } finally {
       dispatch(hideLoading());

@@ -1,5 +1,6 @@
 import React from 'react';
 import LoadingBar from './components/atoms/LoadingBar';
+import Toast from './components/atoms/Toast';
 import NavigationBar from './components/organisms/NavigationBar';
 import AppRoutes from './components/organisms/AppRoutes';
 import useApp from './hooks/useApp';
@@ -13,6 +14,7 @@ function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 antialiased">
+      <Toast />
       <LoadingBar
         style={{
           backgroundColor: '#4f46e5',
