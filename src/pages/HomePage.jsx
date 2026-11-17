@@ -16,6 +16,13 @@ function HomePage() {
     handleDownVote,
   } = useHomePage();
 
+  const headingTitle = selectedCategory
+    ? `Diskusi Kategori #${selectedCategory}`
+    : 'Diskusi Populer';
+
+  const authUserId = authUser?.id || null;
+  const isEmpty = threads.length === 0;
+
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 pb-24 space-y-6">
       {/* Category Filter Chips */}
@@ -30,15 +37,13 @@ function HomePage() {
       {/* Thread List */}
       <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-bold text-slate-900">
-            {selectedCategory ? `Diskusi Kategori #${selectedCategory}` : 'Diskusi Populer'}
-          </h2>
+          <h2 className="text-lg font-bold text-slate-900">{headingTitle}</h2>
           <span className="text-xs text-slate-500 font-medium">
             {threads.length} diskusi ditemukan
           </span>
         </div>
 
-        {threads.length === 0 ? (
+        {isEmpty ? (
           <div className="bg-white rounded-xl border border-slate-200/80 p-12 text-center text-slate-500 space-y-2">
             <p className="text-base font-semibold text-slate-700">Tidak ada diskusi ditemukan</p>
             <p className="text-sm">Jadilah yang pertama untuk memulai diskusi!</p>
@@ -49,7 +54,7 @@ function HomePage() {
               <ThreadItem
                 key={thread.id}
                 {...thread}
-                authUserId={authUser ? authUser.id : null}
+                authUserId={authUserId}
                 onUpVote={handleUpVote}
                 onDownVote={handleDownVote}
               />

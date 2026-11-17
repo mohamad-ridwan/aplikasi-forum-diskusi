@@ -4,6 +4,20 @@ import Badge from '../atoms/Badge';
 function CategoryChips({ categories = [], selectedCategory = '', onSelectCategory }) {
   if (!categories.length) return null;
 
+  const handleSelectAll = () => {
+    onSelectCategory('');
+  };
+
+  const handleCategoryClick = (category) => () => {
+    const nextCategory = selectedCategory === category ? '' : category;
+    onSelectCategory(nextCategory);
+  };
+
+  const allButtonClass =
+    selectedCategory === ''
+      ? 'bg-indigo-600 text-white shadow-sm ring-2 ring-indigo-300'
+      : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200';
+
   return (
     <div className="w-full overflow-x-auto py-2">
       <div className="flex items-center gap-2">
@@ -12,12 +26,8 @@ function CategoryChips({ categories = [], selectedCategory = '', onSelectCategor
         </span>
         <button
           type="button"
-          onClick={() => onSelectCategory('')}
-          className={`px-3 py-1 rounded-full text-xs font-medium transition cursor-pointer ${
-            selectedCategory === ''
-              ? 'bg-indigo-600 text-white shadow-sm ring-2 ring-indigo-300'
-              : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200'
-          }`}
+          onClick={handleSelectAll}
+          className={`px-3 py-1 rounded-full text-xs font-medium transition cursor-pointer ${allButtonClass}`}
         >
           Semua
         </button>
@@ -26,13 +36,7 @@ function CategoryChips({ categories = [], selectedCategory = '', onSelectCategor
             key={category}
             label={category}
             active={selectedCategory === category}
-            onClick={() => {
-              if (selectedCategory === category) {
-                onSelectCategory('');
-              } else {
-                onSelectCategory(category);
-              }
-            }}
+            onClick={handleCategoryClick(category)}
           />
         ))}
       </div>

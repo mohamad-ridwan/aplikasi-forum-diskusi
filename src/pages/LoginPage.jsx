@@ -11,6 +11,7 @@ function LoginPage() {
     password,
     handlePasswordChange,
     isLoading,
+    submitButtonText,
     handleSubmit,
   } = useLoginPage();
 
@@ -54,7 +55,7 @@ function LoginPage() {
             className="w-full mt-2"
             disabled={isLoading}
           >
-            {isLoading ? 'Sedang Masuk...' : 'Masuk Sekarang'}
+            {submitButtonText}
           </Button>
         </form>
 

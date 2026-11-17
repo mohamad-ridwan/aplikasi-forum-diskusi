@@ -23,12 +23,15 @@ function useLoginPage() {
     }
   };
 
+  const submitButtonText = isLoading ? 'Sedang Masuk...' : 'Masuk Sekarang';
+
   return {
     email,
     handleEmailChange,
     password,
     handlePasswordChange,
     isLoading,
+    submitButtonText,
     handleSubmit,
   };
 }

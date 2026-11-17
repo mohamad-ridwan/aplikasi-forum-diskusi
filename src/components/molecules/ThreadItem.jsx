@@ -20,6 +20,21 @@ function ThreadItem({
   onUpVote,
   onDownVote,
 }) {
+  const formattedDate = postedAt(createdAt);
+  const snippetBody = truncate(body, 180);
+
+  const handleVoteUp = (voteType) => {
+    if (onUpVote) {
+      onUpVote({ threadId: id, voteType });
+    }
+  };
+
+  const handleVoteDown = (voteType) => {
+    if (onDownVote) {
+      onDownVote({ threadId: id, voteType });
+    }
+  };
+
   return (
     <article className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-sm hover:shadow-md transition-shadow">
       <header className="flex items-center justify-between gap-3 mb-3">
@@ -27,7 +42,7 @@ function ThreadItem({
           <Avatar image={user.avatar} name={user.name} size="md" />
           <div className="min-w-0">
             <h4 className="text-sm font-semibold text-slate-800 truncate">{user.name}</h4>
-            <p className="text-xs text-slate-400">{postedAt(createdAt)}</p>
+            <p className="text-xs text-slate-400">{formattedDate}</p>
           </div>
         </div>
         {category && <Badge label={category} />}
@@ -40,7 +55,7 @@ function ThreadItem({
           </Link>
         </h3>
         <p className="text-sm text-slate-600 leading-relaxed line-clamp-3">
-          {truncate(body, 180)}
+          {snippetBody}
         </p>
       </div>
 
@@ -49,8 +64,8 @@ function ThreadItem({
           upVotesBy={upVotesBy}
           downVotesBy={downVotesBy}
           authUserId={authUserId}
-          onUpVote={(voteType) => onUpVote && onUpVote({ threadId: id, voteType })}
-          onDownVote={(voteType) => onDownVote && onDownVote({ threadId: id, voteType })}
+          onUpVote={handleVoteUp}
+          onDownVote={handleVoteDown}
         />
 
         <Link

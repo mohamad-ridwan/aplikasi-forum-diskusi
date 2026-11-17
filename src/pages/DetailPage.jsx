@@ -23,29 +23,34 @@ function DetailPage() {
     );
   }
 
+  const comments = detailThread.comments || [];
+  const commentsCount = comments.length;
+  const hasComments = commentsCount > 0;
+  const authUserId = authUser?.id || null;
+
   return (
-    <div className='max-w-4xl mx-auto px-4 sm:px-6 py-6 pb-20 space-y-6'>
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 pb-20 space-y-6">
       <ThreadDetail
         {...detailThread}
-        authUserId={authUser ? authUser.id : null}
+        authUserId={authUserId}
         onUpVote={handleUpVoteThread}
         onDownVote={handleDownVoteThread}
       />
 
       <section className="space-y-4">
         <h3 className="text-lg font-bold text-slate-900">
-          Komentar ({detailThread.comments ? detailThread.comments.length : 0})
+          Komentar ({commentsCount})
         </h3>
 
         <CommentInput authUser={authUser} onAddComment={handleAddComment} />
 
         <div className="space-y-3 pt-2">
-          {detailThread.comments && detailThread.comments.length > 0 ? (
-            detailThread.comments.map((comment) => (
+          {hasComments ? (
+            comments.map((comment) => (
               <CommentItem
                 key={comment.id}
                 {...comment}
-                authUserId={authUser ? authUser.id : null}
+                authUserId={authUserId}
                 onUpVote={handleUpVoteComment}
                 onDownVote={handleDownVoteComment}
               />

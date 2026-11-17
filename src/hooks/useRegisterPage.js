@@ -45,6 +45,8 @@ function useRegisterPage() {
     }
   };
 
+  const submitButtonText = isLoading ? 'Mendaftarkan Akun...' : 'Daftar Sekarang';
+
   return {
     name,
     handleNameChange,
@@ -54,6 +56,7 @@ function useRegisterPage() {
     handlePasswordChange,
     errorPassword,
     isLoading,
+    submitButtonText,
     handleSubmit,
   };
 }

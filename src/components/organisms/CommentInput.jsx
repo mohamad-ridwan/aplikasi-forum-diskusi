@@ -24,12 +24,18 @@ function CommentInput({ authUser, onAddComment }) {
     );
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleContentChange = (event) => {
+    setContent(event.target.value);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
     if (!content.trim()) return;
     onAddComment(content);
     setContent('');
   };
+
+  const isSubmitDisabled = !content.trim();
 
   return (
     <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-sm">
@@ -39,13 +45,13 @@ function CommentInput({ authUser, onAddComment }) {
           <textarea
             rows="3"
             value={content}
-            onChange={(e) => setContent(e.target.value)}
+            onChange={handleContentChange}
             placeholder="Tuliskan komentar atau tanggapan Anda..."
             required
             className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-sm text-slate-900 bg-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition resize-y"
           />
           <div className="flex justify-end">
-            <Button type="submit" variant="primary" size="sm" disabled={!content.trim()}>
+            <Button type="submit" variant="primary" size="sm" disabled={isSubmitDisabled}>
               Kirim Komentar
             </Button>
           </div>

@@ -4,10 +4,27 @@ import { FiMessageSquare, FiAward, FiLogOut, FiLogIn, FiUserPlus } from 'react-i
 import Avatar from '../atoms/Avatar';
 import Button from '../atoms/Button';
 
+function getNavLinkClass(isActive) {
+  const activeStyle = 'bg-indigo-50 text-indigo-600';
+  const inactiveStyle = 'text-slate-600 hover:text-slate-900 hover:bg-slate-100';
+  return `inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-semibold transition ${
+    isActive ? activeStyle : inactiveStyle
+  }`;
+}
+
+function getMobileNavLinkClass(isActive) {
+  const activeStyle = 'text-indigo-600';
+  const inactiveStyle = 'text-slate-600';
+  return `flex items-center gap-1.5 text-xs font-semibold py-1 px-3 rounded ${
+    isActive ? activeStyle : inactiveStyle
+  }`;
+}
+
 function NavigationBar({ authUser, onLogout }) {
   const location = useLocation();
 
-  const isActive = (path) => location.pathname === path;
+  const isHomeActive = location.pathname === '/';
+  const isLeaderboardsActive = location.pathname === '/leaderboards';
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200">
@@ -23,25 +40,11 @@ function NavigationBar({ authUser, onLogout }) {
           </Link>
 
           <nav className="hidden sm:flex items-center gap-1">
-            <Link
-              to="/"
-              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-semibold transition ${
-                isActive('/')
-                  ? 'bg-indigo-50 text-indigo-600'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-              }`}
-            >
+            <Link to="/" className={getNavLinkClass(isHomeActive)}>
               <FiMessageSquare className="text-base" />
               <span>Diskusi</span>
             </Link>
-            <Link
-              to="/leaderboards"
-              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-semibold transition ${
-                isActive('/leaderboards')
-                  ? 'bg-indigo-50 text-indigo-600'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-              }`}
-            >
+            <Link to="/leaderboards" className={getNavLinkClass(isLeaderboardsActive)}>
               <FiAward className="text-base" />
               <span>Klasemen</span>
             </Link>
@@ -88,21 +91,11 @@ function NavigationBar({ authUser, onLogout }) {
 
       {/* Mobile nav subbar */}
       <div className="sm:hidden flex items-center justify-around border-t border-slate-100 py-1.5 bg-slate-50/50">
-        <Link
-          to="/"
-          className={`flex items-center gap-1.5 text-xs font-semibold py-1 px-3 rounded ${
-            isActive('/') ? 'text-indigo-600' : 'text-slate-600'
-          }`}
-        >
+        <Link to="/" className={getMobileNavLinkClass(isHomeActive)}>
           <FiMessageSquare />
           <span>Diskusi</span>
         </Link>
-        <Link
-          to="/leaderboards"
-          className={`flex items-center gap-1.5 text-xs font-semibold py-1 px-3 rounded ${
-            isActive('/leaderboards') ? 'text-indigo-600' : 'text-slate-600'
-          }`}
-        >
+        <Link to="/leaderboards" className={getMobileNavLinkClass(isLeaderboardsActive)}>
           <FiAward />
           <span>Klasemen</span>
         </Link>

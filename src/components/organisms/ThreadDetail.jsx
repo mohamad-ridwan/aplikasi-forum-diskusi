@@ -18,6 +18,8 @@ function ThreadDetail({
   onUpVote,
   onDownVote,
 }) {
+  const formattedDate = postedAt(createdAt);
+
   return (
     <div className="space-y-4">
       <Link
@@ -35,7 +37,7 @@ function ThreadDetail({
               <Avatar image={owner.avatar} name={owner.name} size="md" />
               <div>
                 <h3 className="text-sm font-bold text-slate-800">{owner.name}</h3>
-                <p className="text-xs text-slate-400">{postedAt(createdAt)}</p>
+                <p className="text-xs text-slate-400">{formattedDate}</p>
               </div>
             </div>
             {category && <Badge label={category} />}
@@ -56,8 +58,8 @@ function ThreadDetail({
             upVotesBy={upVotesBy}
             downVotesBy={downVotesBy}
             authUserId={authUserId}
-            onUpVote={(voteType) => onUpVote && onUpVote(voteType)}
-            onDownVote={(voteType) => onDownVote && onDownVote(voteType)}
+            onUpVote={onUpVote}
+            onDownVote={onDownVote}
           />
         </footer>
       </article>

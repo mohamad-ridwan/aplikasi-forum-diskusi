@@ -37,6 +37,9 @@ function useNewThreadPage() {
     navigate('/');
   };
 
+  const isSubmitDisabled = isLoading || !title.trim() || !body.trim();
+  const submitButtonText = isLoading ? 'Menerbitkan...' : 'Terbitkan Diskusi';
+
   return {
     authUser,
     title,
@@ -46,6 +49,8 @@ function useNewThreadPage() {
     body,
     handleBodyChange,
     isLoading,
+    isSubmitDisabled,
+    submitButtonText,
     handleSubmit,
     handleCancel,
   };

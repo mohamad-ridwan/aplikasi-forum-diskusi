@@ -14,6 +14,7 @@ function RegisterPage() {
     handlePasswordChange,
     errorPassword,
     isLoading,
+    submitButtonText,
     handleSubmit,
   } = useRegisterPage();
 
@@ -68,7 +69,7 @@ function RegisterPage() {
             className="w-full mt-2"
             disabled={isLoading}
           >
-            {isLoading ? 'Mendaftarkan Akun...' : 'Daftar Sekarang'}
+            {submitButtonText}
           </Button>
         </form>
 

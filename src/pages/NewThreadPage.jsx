@@ -14,6 +14,8 @@ function NewThreadPage() {
     body,
     handleBodyChange,
     isLoading,
+    isSubmitDisabled,
+    submitButtonText,
     handleSubmit,
     handleCancel,
   } = useNewThreadPage();
@@ -82,9 +84,9 @@ function NewThreadPage() {
             <Button
               type="submit"
               variant="primary"
-              disabled={isLoading || !title.trim() || !body.trim()}
+              disabled={isSubmitDisabled}
             >
-              {isLoading ? 'Menerbitkan...' : 'Terbitkan Diskusi'}
+              {submitButtonText}
             </Button>
           </div>
         </form>

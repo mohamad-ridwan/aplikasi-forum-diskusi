@@ -14,6 +14,20 @@ function CommentItem({
   onUpVote,
   onDownVote,
 }) {
+  const formattedDate = postedAt(createdAt);
+
+  const handleVoteUp = (voteType) => {
+    if (onUpVote) {
+      onUpVote({ commentId: id, voteType });
+    }
+  };
+
+  const handleVoteDown = (voteType) => {
+    if (onDownVote) {
+      onDownVote({ commentId: id, voteType });
+    }
+  };
+
   return (
     <article className="bg-slate-50/70 rounded-xl border border-slate-200/70 p-4 transition">
       <header className="flex items-center justify-between gap-3 mb-2.5">
@@ -21,7 +35,7 @@ function CommentItem({
           <Avatar image={owner.avatar} name={owner.name} size="sm" />
           <div className="min-w-0">
             <h5 className="text-sm font-semibold text-slate-800 truncate">{owner.name}</h5>
-            <p className="text-xs text-slate-400">{postedAt(createdAt)}</p>
+            <p className="text-xs text-slate-400">{formattedDate}</p>
           </div>
         </div>
       </header>
@@ -36,8 +50,8 @@ function CommentItem({
           upVotesBy={upVotesBy}
           downVotesBy={downVotesBy}
           authUserId={authUserId}
-          onUpVote={(voteType) => onUpVote && onUpVote({ commentId: id, voteType })}
-          onDownVote={(voteType) => onDownVote && onDownVote({ commentId: id, voteType })}
+          onUpVote={handleVoteUp}
+          onDownVote={handleVoteDown}
         />
       </footer>
     </article>

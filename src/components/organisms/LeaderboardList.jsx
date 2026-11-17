@@ -2,35 +2,42 @@ import React from 'react';
 import { FiAward } from 'react-icons/fi';
 import Avatar from '../atoms/Avatar';
 
-function LeaderboardList({ leaderboards = [] }) {
-  const getRankBadge = (rank) => {
-    if (rank === 1) {
-      return (
-        <span className="w-7 h-7 rounded-full bg-amber-400 text-white font-black text-xs flex items-center justify-center shadow-sm">
-          1
-        </span>
-      );
-    }
-    if (rank === 2) {
-      return (
-        <span className="w-7 h-7 rounded-full bg-slate-400 text-white font-black text-xs flex items-center justify-center shadow-sm">
-          2
-        </span>
-      );
-    }
-    if (rank === 3) {
-      return (
-        <span className="w-7 h-7 rounded-full bg-amber-700 text-white font-black text-xs flex items-center justify-center shadow-sm">
-          3
-        </span>
-      );
-    }
+function getRankBadge(rank) {
+  if (rank === 1) {
     return (
-      <span className="w-7 h-7 rounded-full bg-slate-100 text-slate-500 font-bold text-xs flex items-center justify-center">
-        {rank}
+      <span className="w-7 h-7 rounded-full bg-amber-400 text-white font-black text-xs flex items-center justify-center shadow-sm">
+        1
       </span>
     );
-  };
+  }
+  if (rank === 2) {
+    return (
+      <span className="w-7 h-7 rounded-full bg-slate-400 text-white font-black text-xs flex items-center justify-center shadow-sm">
+        2
+      </span>
+    );
+  }
+  if (rank === 3) {
+    return (
+      <span className="w-7 h-7 rounded-full bg-amber-700 text-white font-black text-xs flex items-center justify-center shadow-sm">
+        3
+      </span>
+    );
+  }
+  return (
+    <span className="w-7 h-7 rounded-full bg-slate-100 text-slate-500 font-bold text-xs flex items-center justify-center">
+      {rank}
+    </span>
+  );
+}
+
+function getRowClass(index) {
+  const topRankClass = index === 0 ? 'bg-amber-50/20' : '';
+  return `flex items-center justify-between px-6 py-4 hover:bg-slate-50/70 transition ${topRankClass}`;
+}
+
+function LeaderboardList({ leaderboards = [] }) {
+  const isEmpty = leaderboards.length === 0;
 
   return (
     <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
@@ -54,36 +61,31 @@ function LeaderboardList({ leaderboards = [] }) {
           <span className="w-20 text-right">Skor Poin</span>
         </div>
 
-        {leaderboards.map((item, index) => (
-          <div
-            key={item.user.id}
-            className={`flex items-center justify-between px-6 py-4 hover:bg-slate-50/70 transition ${
-              index === 0 ? 'bg-amber-50/20' : ''
-            }`}
-          >
-            <div className="flex items-center gap-4 min-w-0 flex-1">
-              {getRankBadge(index + 1)}
-              <Avatar image={item.user.avatar} name={item.user.name} size="md" />
-              <div className="min-w-0">
-                <h4 className="text-sm font-bold text-slate-800 truncate">
-                  {item.user.name}
-                </h4>
-                <p className="text-xs text-slate-400 truncate">{item.user.email}</p>
-              </div>
-            </div>
-
-            <div className="w-20 text-right">
-              <span className="inline-block px-3 py-1 bg-indigo-50 text-indigo-700 font-extrabold text-sm rounded-lg border border-indigo-100">
-                {item.score}
-              </span>
-            </div>
-          </div>
-        ))}
-
-        {leaderboards.length === 0 && (
+        {isEmpty ? (
           <div className="py-12 text-center text-slate-400 text-sm">
             Memuat data klasemen...
           </div>
+        ) : (
+          leaderboards.map((item, index) => (
+            <div key={item.user.id} className={getRowClass(index)}>
+              <div className="flex items-center gap-4 min-w-0 flex-1">
+                {getRankBadge(index + 1)}
+                <Avatar image={item.user.avatar} name={item.user.name} size="md" />
+                <div className="min-w-0">
+                  <h4 className="text-sm font-bold text-slate-800 truncate">
+                    {item.user.name}
+                  </h4>
+                  <p className="text-xs text-slate-400 truncate">{item.user.email}</p>
+                </div>
+              </div>
+
+              <div className="w-20 text-right">
+                <span className="inline-block px-3 py-1 bg-indigo-50 text-indigo-700 font-extrabold text-sm rounded-lg border border-indigo-100">
+                  {item.score}
+                </span>
+              </div>
+            </div>
+          ))
         )}
       </div>
     </div>
