@@ -1,11 +1,11 @@
 const ActionType = {
-  SET_NOTIFICATION: "SET_NOTIFICATION",
-  CLEAR_NOTIFICATION: "CLEAR_NOTIFICATION",
+  SET_NOTIFICATION: 'SET_NOTIFICATION',
+  CLEAR_NOTIFICATION: 'CLEAR_NOTIFICATION',
 };
 
 let notificationTimeoutId = null;
 
-function setNotificationActionCreator({ message, type = "error" }) {
+function setNotificationActionCreator({ message, type = 'error' }) {
   return {
     type: ActionType.SET_NOTIFICATION,
     payload: {
@@ -23,7 +23,7 @@ function clearNotificationActionCreator() {
   };
 }
 
-function asyncShowNotification({ message, type = "error", duration = 5000 }) {
+function asyncShowNotification({ message, type = 'error', duration = 5000 }) {
   return (dispatch) => {
     if (notificationTimeoutId) {
       clearTimeout(notificationTimeoutId);
