@@ -15,7 +15,8 @@ Aplikasi ini dibangun untuk memenuhi seluruh **Kriteria Utama** dan seluruh **Sa
 4. **Detail Thread & Komentar**: Halaman mendalam memuat seluruh isi thread, rincian pembuat, serta daftar komentar lengkap.
 5. **Pembuatan Thread Baru**: Formulir pembuatan topik baru dengan judul, kategori topik, dan isi lengkap (wajib login).
 6. **Pembuatan Komentar**: Formulir tanggapan pada detail thread yang langsung memperbarui daftar komentar (wajib login).
-7. **Loading Bar Indicator**: Indikator loading interaktif di bagian paling atas viewport menggunakan `react-redux-loading-bar` selama thunk request berjalan.
+7. **Loading Bar Indicator**: Indikator loading interaktif di bagian paling atas viewport menggunakan custom `LoadingBar` wrapper (berbasis `react-redux-loading-bar`) selama thunk request berjalan.
+8. **Toast Notification System**: Sistem notifikasi toast global untuk umpan balik aksi pengguna (sukses, error, rollback vote) melalui Redux state `notification` dan custom hook `useToast`.
 
 ### 🌟 Fitur Improvisasi (Bintang 5)
 1. **Saran 1: Optimistic UI Updates untuk Votes (Thread & Komentar)**:
@@ -40,9 +41,9 @@ Aplikasi ini dibangun untuk memenuhi seluruh **Kriteria Utama** dan seluruh **Sa
 - **Library UI**: React 18
 - **State Management**: Redux (via `@reduxjs/toolkit` `configureStore`) & `react-redux`
 - **Routing**: `react-router-dom` v6
-- **Asynchronous Feedback**: `react-redux-loading-bar`
+- **Asynchronous Feedback**: `react-redux-loading-bar` (dibungkus custom `LoadingBar.jsx`)
 - **Styling**: Tailwind CSS & `react-icons`
-- **Linting**: ESLint berbasis Dicoding JavaScript Style Guide
+- **Linting**: ESLint dengan `eslint-config-dicodingacademy` (Dicoding JavaScript Style Guide)
 - **Bundler & Dev Server**: Vite
 
 ### Struktur Direktori
@@ -52,10 +53,10 @@ aplikasi-forum-diskusi/
 ├── src/
 │   ├── assets/              # Aset statis
 │   ├── components/
-│   │   ├── atoms/           # Avatar, Badge, Button, Input
+│   │   ├── atoms/           # Avatar, Badge, Button, Input, GuestRoute, LoadingBar, Toast
 │   │   ├── molecules/       # VoteButton, ThreadItem, CommentItem, CategoryChips
-│   │   └── organisms/       # NavigationBar, ThreadDetail, CommentInput, LeaderboardList
-│   ├── hooks/               # Custom Hooks (Clean Code Headless Logic: useInput, useHomePage, dll.)
+│   │   └── organisms/       # AppRoutes, NavigationBar, ThreadDetail, CommentInput, LeaderboardList
+│   ├── hooks/               # Custom Hooks: useApp, useInput, useToast, useHomePage, useDetailPage, useLoginPage, useRegisterPage, useNewThreadPage, useLeaderboardsPage
 │   ├── pages/               # HomePage, DetailPage, LoginPage, RegisterPage, NewThreadPage, LeaderboardsPage, NotFoundPage
 │   ├── states/              # Redux State Management
 │   │   ├── authUser/
@@ -65,6 +66,7 @@ aplikasi-forum-diskusi/
 │   │   ├── detailThread/
 │   │   ├── leaderboards/
 │   │   ├── filterCategory/
+│   │   ├── notification/
 │   │   ├── shared/
 │   │   └── index.js
 │   ├── utils/               # api.js & index.js
