@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import LoadingBar from 'react-redux-loading-bar';
+import LoadingBar from './components/atoms/LoadingBar';
 import NavigationBar from './components/organisms/NavigationBar';
 import HomePage from './pages/HomePage';
 import DetailPage from './pages/DetailPage';
