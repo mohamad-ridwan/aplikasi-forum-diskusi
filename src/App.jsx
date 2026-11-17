@@ -1,29 +1,11 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import React from 'react';
 import LoadingBar from './components/atoms/LoadingBar';
 import NavigationBar from './components/organisms/NavigationBar';
-import HomePage from './pages/HomePage';
-import DetailPage from './pages/DetailPage';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import NewThreadPage from './pages/NewThreadPage';
-import LeaderboardsPage from './pages/LeaderboardsPage';
-import NotFoundPage from './pages/NotFoundPage';
-import { asyncPreloadProcess } from './states/isPreload/action';
-import { asyncUnsetAuthUser } from './states/authUser/action';
+import AppRoutes from './components/organisms/AppRoutes';
+import useApp from './hooks/useApp';
 
 function App() {
-  const dispatch = useDispatch();
-  const { authUser, isPreload } = useSelector((states) => states);
-
-  useEffect(() => {
-    dispatch(asyncPreloadProcess());
-  }, [dispatch]);
-
-  const onLogout = () => {
-    dispatch(asyncUnsetAuthUser());
-  };
+  const { authUser, isPreload, onLogout } = useApp();
 
   if (isPreload) {
     return null;
@@ -44,21 +26,7 @@ function App() {
       <NavigationBar authUser={authUser} onLogout={onLogout} />
 
       <main className="flex-1">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/threads/:id" element={<DetailPage />} />
-          <Route path="/new" element={<NewThreadPage />} />
-          <Route path="/leaderboards" element={<LeaderboardsPage />} />
-          <Route
-            path="/login"
-            element={authUser ? <Navigate to="/" replace /> : <LoginPage />}
-          />
-          <Route
-            path="/register"
-            element={authUser ? <Navigate to="/" replace /> : <RegisterPage />}
-          />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+        <AppRoutes authUser={authUser} />
       </main>
     </div>
   );
