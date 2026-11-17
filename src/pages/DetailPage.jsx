@@ -1,26 +1,19 @@
-import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
 import ThreadDetail from '../components/organisms/ThreadDetail';
 import CommentInput from '../components/organisms/CommentInput';
 import CommentItem from '../components/molecules/CommentItem';
-import {
-  asyncReceiveDetailThread,
-  asyncAddComment,
-  asyncToggleVoteDetailThread,
-  asyncToggleVoteComment,
-} from '../states/detailThread/action';
+import useDetailPage from '../hooks/useDetailPage';
 
 function DetailPage() {
-  const { id } = useParams();
-  const dispatch = useDispatch();
-  const { detailThread, authUser } = useSelector((states) => states);
-
-  useEffect(() => {
-    if (id) {
-      dispatch(asyncReceiveDetailThread(id));
-    }
-  }, [id, dispatch]);
+  const {
+    detailThread,
+    authUser,
+    handleUpVoteThread,
+    handleDownVoteThread,
+    handleAddComment,
+    handleUpVoteComment,
+    handleDownVoteComment,
+  } = useDetailPage();
 
   if (!detailThread) {
     return (
@@ -30,33 +23,13 @@ function DetailPage() {
     );
   }
 
-  const onUpVoteThread = (voteType) => {
-    dispatch(asyncToggleVoteDetailThread(voteType));
-  };
-
-  const onDownVoteThread = (voteType) => {
-    dispatch(asyncToggleVoteDetailThread(voteType));
-  };
-
-  const onAddComment = (content) => {
-    dispatch(asyncAddComment({ threadId: id, content }));
-  };
-
-  const onUpVoteComment = ({ commentId, voteType }) => {
-    dispatch(asyncToggleVoteComment({ commentId, voteType }));
-  };
-
-  const onDownVoteComment = ({ commentId, voteType }) => {
-    dispatch(asyncToggleVoteComment({ commentId, voteType }));
-  };
-
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 pb-20 space-y-6">
+    <div className='max-w-4xl mx-auto px-4 sm:px-6 py-6 pb-20 space-y-6'>
       <ThreadDetail
         {...detailThread}
         authUserId={authUser ? authUser.id : null}
-        onUpVote={onUpVoteThread}
-        onDownVote={onDownVoteThread}
+        onUpVote={handleUpVoteThread}
+        onDownVote={handleDownVoteThread}
       />
 
       <section className="space-y-4">
@@ -64,7 +37,7 @@ function DetailPage() {
           Komentar ({detailThread.comments ? detailThread.comments.length : 0})
         </h3>
 
-        <CommentInput authUser={authUser} onAddComment={onAddComment} />
+        <CommentInput authUser={authUser} onAddComment={handleAddComment} />
 
         <div className="space-y-3 pt-2">
           {detailThread.comments && detailThread.comments.length > 0 ? (
@@ -73,8 +46,8 @@ function DetailPage() {
                 key={comment.id}
                 {...comment}
                 authUserId={authUser ? authUser.id : null}
-                onUpVote={onUpVoteComment}
-                onDownVote={onDownVoteComment}
+                onUpVote={handleUpVoteComment}
+                onDownVote={handleDownVoteComment}
               />
             ))
           ) : (

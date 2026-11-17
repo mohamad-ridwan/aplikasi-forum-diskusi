@@ -55,6 +55,7 @@ aplikasi-forum-diskusi/
 │   │   ├── atoms/           # Avatar, Badge, Button, Input
 │   │   ├── molecules/       # VoteButton, ThreadItem, CommentItem, CategoryChips
 │   │   └── organisms/       # NavigationBar, ThreadDetail, CommentInput, LeaderboardList
+│   ├── hooks/               # Custom Hooks (Clean Code Headless Logic: useInput, useHomePage, dll.)
 │   ├── pages/               # HomePage, DetailPage, LoginPage, RegisterPage, NewThreadPage, LeaderboardsPage, NotFoundPage
 │   ├── states/              # Redux State Management
 │   │   ├── authUser/

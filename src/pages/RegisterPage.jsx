@@ -1,37 +1,21 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import Input from '../components/atoms/Input';
 import Button from '../components/atoms/Button';
-import { asyncRegisterUser } from '../states/users/action';
+import useRegisterPage from '../hooks/useRegisterPage';
 
 function RegisterPage() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorPassword, setErrorPassword] = useState('');
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (password.length < 6) {
-      setErrorPassword('Password minimal 6 karakter.');
-      return;
-    }
-    setErrorPassword('');
-    setIsLoading(true);
-
-    const result = await dispatch(asyncRegisterUser({ name, email, password }));
-    setIsLoading(false);
-
-    if (result && !result.error) {
-      alert('Registrasi akun berhasil! Silakan masuk menggunakan akun baru Anda.');
-      navigate('/login');
-    }
-  };
+  const {
+    name,
+    handleNameChange,
+    email,
+    handleEmailChange,
+    password,
+    handlePasswordChange,
+    errorPassword,
+    isLoading,
+    handleSubmit,
+  } = useRegisterPage();
 
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12">
@@ -52,7 +36,7 @@ function RegisterPage() {
             label="Nama Lengkap"
             type="text"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={handleNameChange}
             placeholder="John Doe"
             required
           />
@@ -62,7 +46,7 @@ function RegisterPage() {
             label="Alamat Email"
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleEmailChange}
             placeholder="nama@email.com"
             required
           />
@@ -72,10 +56,7 @@ function RegisterPage() {
             label="Kata Sandi (min. 6 karakter)"
             type="password"
             value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-              if (e.target.value.length >= 6) setErrorPassword('');
-            }}
+            onChange={handlePasswordChange}
             placeholder="••••••••"
             required
             error={errorPassword}

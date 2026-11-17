@@ -1,15 +1,9 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
 import LeaderboardList from '../components/organisms/LeaderboardList';
-import { asyncReceiveLeaderboards } from '../states/leaderboards/action';
+import useLeaderboardsPage from '../hooks/useLeaderboardsPage';
 
 function LeaderboardsPage() {
-  const dispatch = useDispatch();
-  const { leaderboards = [] } = useSelector((states) => states);
-
-  useEffect(() => {
-    dispatch(asyncReceiveLeaderboards());
-  }, [dispatch]);
+  const { leaderboards } = useLeaderboardsPage();
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 pb-20">

@@ -1,28 +1,18 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import Input from '../components/atoms/Input';
 import Button from '../components/atoms/Button';
-import { asyncSetAuthUser } from '../states/authUser/action';
+import useLoginPage from '../hooks/useLoginPage';
 
 function LoginPage() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    const result = await dispatch(asyncSetAuthUser({ email, password }));
-    setIsLoading(false);
-
-    if (result && !result.error) {
-      navigate('/');
-    }
-  };
+  const {
+    email,
+    handleEmailChange,
+    password,
+    handlePasswordChange,
+    isLoading,
+    handleSubmit,
+  } = useLoginPage();
 
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12">
@@ -43,7 +33,7 @@ function LoginPage() {
             label="Alamat Email"
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleEmailChange}
             placeholder="nama@email.com"
             required
           />
@@ -53,7 +43,7 @@ function LoginPage() {
             label="Kata Sandi"
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handlePasswordChange}
             placeholder="••••••••"
             required
           />

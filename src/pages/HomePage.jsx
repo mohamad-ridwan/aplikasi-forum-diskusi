@@ -1,57 +1,20 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { FiPlus } from 'react-icons/fi';
 import CategoryChips from '../components/molecules/CategoryChips';
 import ThreadItem from '../components/molecules/ThreadItem';
-import { asyncPopulateUsersAndThreads } from '../states/shared/action';
-import {
-  setFilterCategoryActionCreator,
-  clearFilterCategoryActionCreator,
-} from '../states/filterCategory/action';
-import { asyncToggleVoteThread } from '../states/threads/action';
+import useHomePage from '../hooks/useHomePage';
 
 function HomePage() {
-  const dispatch = useDispatch();
-  const { threads = [], users = [], authUser, filterCategory } = useSelector(
-    (states) => states
-  );
-
-  useEffect(() => {
-    dispatch(asyncPopulateUsersAndThreads());
-  }, [dispatch]);
-
-  const categories = Array.from(
-    new Set(threads.map((thread) => thread.category).filter(Boolean))
-  );
-
-  const populatedThreads = threads.map((thread) => ({
-    ...thread,
-    user: users.find((u) => u.id === thread.ownerId) || {
-      name: 'Anonim',
-      avatar: '',
-    },
-  }));
-
-  const filteredThreads = filterCategory
-    ? populatedThreads.filter((t) => t.category === filterCategory)
-    : populatedThreads;
-
-  const onSelectCategory = (category) => {
-    if (!category) {
-      dispatch(clearFilterCategoryActionCreator());
-    } else {
-      dispatch(setFilterCategoryActionCreator(category));
-    }
-  };
-
-  const onUpVote = ({ threadId, voteType }) => {
-    dispatch(asyncToggleVoteThread({ threadId, voteType }));
-  };
-
-  const onDownVote = ({ threadId, voteType }) => {
-    dispatch(asyncToggleVoteThread({ threadId, voteType }));
-  };
+  const {
+    threads,
+    categories,
+    selectedCategory,
+    authUser,
+    handleSelectCategory,
+    handleUpVote,
+    handleDownVote,
+  } = useHomePage();
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 pb-24 space-y-6">
@@ -59,8 +22,8 @@ function HomePage() {
       <section className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-sm">
         <CategoryChips
           categories={categories}
-          selectedCategory={filterCategory}
-          onSelectCategory={onSelectCategory}
+          selectedCategory={selectedCategory}
+          onSelectCategory={handleSelectCategory}
         />
       </section>
 
@@ -68,27 +31,27 @@ function HomePage() {
       <section className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-bold text-slate-900">
-            {filterCategory ? `Diskusi Kategori #${filterCategory}` : 'Diskusi Populer'}
+            {selectedCategory ? `Diskusi Kategori #${selectedCategory}` : 'Diskusi Populer'}
           </h2>
           <span className="text-xs text-slate-500 font-medium">
-            {filteredThreads.length} diskusi ditemukan
+            {threads.length} diskusi ditemukan
           </span>
         </div>
 
-        {filteredThreads.length === 0 ? (
+        {threads.length === 0 ? (
           <div className="bg-white rounded-xl border border-slate-200/80 p-12 text-center text-slate-500 space-y-2">
             <p className="text-base font-semibold text-slate-700">Tidak ada diskusi ditemukan</p>
             <p className="text-sm">Jadilah yang pertama untuk memulai diskusi!</p>
           </div>
         ) : (
           <div className="space-y-4">
-            {filteredThreads.map((thread) => (
+            {threads.map((thread) => (
               <ThreadItem
                 key={thread.id}
                 {...thread}
                 authUserId={authUser ? authUser.id : null}
-                onUpVote={onUpVote}
-                onDownVote={onDownVote}
+                onUpVote={handleUpVote}
+                onDownVote={handleDownVote}
               />
             ))}
           </div>

@@ -1,43 +1,26 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, Navigate } from 'react-router-dom';
+import React from 'react';
+import { Navigate } from 'react-router-dom';
 import Input from '../components/atoms/Input';
 import Button from '../components/atoms/Button';
-import { asyncAddThread } from '../states/threads/action';
+import useNewThreadPage from '../hooks/useNewThreadPage';
 
 function NewThreadPage() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { authUser } = useSelector((states) => states);
+  const {
+    authUser,
+    title,
+    handleTitleChange,
+    category,
+    handleCategoryChange,
+    body,
+    handleBodyChange,
+    isLoading,
+    handleSubmit,
+    handleCancel,
+  } = useNewThreadPage();
 
-  const [title, setTitle] = useState('');
-  const [category, setCategory] = useState('');
-  const [body, setBody] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-
-  // Protected route
   if (!authUser) {
     return <Navigate to="/login" replace />;
   }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!title.trim() || !body.trim()) return;
-
-    setIsLoading(true);
-    const result = await dispatch(
-      asyncAddThread({
-        title,
-        body,
-        category: category.trim(),
-      })
-    );
-    setIsLoading(false);
-
-    if (result && !result.error) {
-      navigate('/');
-    }
-  };
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
@@ -56,7 +39,7 @@ function NewThreadPage() {
             id="title"
             label="Judul Diskusi"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={handleTitleChange}
             placeholder="Contoh: Mengapa useEffect berjalan dua kali di React 18?"
             required
           />
@@ -65,7 +48,7 @@ function NewThreadPage() {
             id="category"
             label="Kategori / Topik"
             value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            onChange={handleCategoryChange}
             placeholder="Contoh: react (opsional)"
           />
 
@@ -80,7 +63,7 @@ function NewThreadPage() {
               id="body"
               rows="7"
               value={body}
-              onChange={(e) => setBody(e.target.value)}
+              onChange={handleBodyChange}
               placeholder="Jelaskan detail pertanyaan atau topik yang ingin Anda diskusikan..."
               required
               className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-sm text-slate-900 bg-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition resize-y"
@@ -91,7 +74,7 @@ function NewThreadPage() {
             <Button
               type="button"
               variant="secondary"
-              onClick={() => navigate('/')}
+              onClick={handleCancel}
               disabled={isLoading}
             >
               Batal
