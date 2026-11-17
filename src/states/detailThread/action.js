@@ -115,18 +115,88 @@ function asyncAddComment({ threadId, content }) {
   };
 }
 
+function requireAuthOrNotify(dispatch, authUser, message) {
+  if (!authUser) {
+    dispatch(asyncShowNotification({ message, type: 'warning' }));
+    return false;
+  }
+  return true;
+}
+
+async function callThreadVoteApi(threadId, voteType) {
+  if (voteType === 1) {
+    await api.upVoteThread(threadId);
+  } else if (voteType === -1) {
+    await api.downVoteThread(threadId);
+  } else {
+    await api.neutralVoteThread(threadId);
+  }
+}
+
+async function callCommentVoteApi({ threadId, commentId, voteType }) {
+  if (voteType === 1) {
+    await api.upVoteComment({ threadId, commentId });
+  } else if (voteType === -1) {
+    await api.downVoteComment({ threadId, commentId });
+  } else {
+    await api.neutralVoteComment({ threadId, commentId });
+  }
+}
+
+async function attemptDetailThreadVoteWithRollback(
+  dispatch,
+  { threadId, voteType, previousUpVotesBy, previousDownVotesBy }
+) {
+  try {
+    await callThreadVoteApi(threadId, voteType);
+  } catch (error) {
+    dispatch(
+      asyncShowNotification({
+        message: `Gagal memperbarui vote pada diskusi: ${error.message || 'Terjadi kesalahan server.'}`,
+        type: 'error',
+      })
+    );
+    dispatch(
+      setDetailThreadVotesActionCreator({
+        upVotesBy: previousUpVotesBy,
+        downVotesBy: previousDownVotesBy,
+      })
+    );
+  }
+}
+
+async function attemptCommentVoteWithRollback(
+  dispatch,
+  { threadId, commentId, voteType, previousUpVotesBy, previousDownVotesBy }
+) {
+  try {
+    await callCommentVoteApi({ threadId, commentId, voteType });
+  } catch (error) {
+    dispatch(
+      asyncShowNotification({
+        message: `Gagal memperbarui vote pada komentar: ${error.message || 'Terjadi kesalahan server.'}`,
+        type: 'error',
+      })
+    );
+    dispatch(
+      setCommentVotesActionCreator({
+        commentId,
+        upVotesBy: previousUpVotesBy,
+        downVotesBy: previousDownVotesBy,
+      })
+    );
+  }
+}
+
 function asyncToggleVoteDetailThread(voteType) {
   return async (dispatch, getState) => {
     const { authUser, detailThread } = getState();
-    if (!authUser) {
-      dispatch(
-        asyncShowNotification({
-          message: 'Silakan masuk (login) terlebih dahulu untuk memberikan suara pada diskusi.',
-          type: 'warning',
-        })
-      );
-      return;
-    }
+    const isAuth = requireAuthOrNotify(
+      dispatch,
+      authUser,
+      'Silakan masuk (login) terlebih dahulu untuk memberikan suara pada diskusi.'
+    );
+    if (!isAuth) return;
     if (!detailThread) return;
 
     const previousUpVotesBy = [...detailThread.upVotesBy];
@@ -139,43 +209,24 @@ function asyncToggleVoteDetailThread(voteType) {
       })
     );
 
-    try {
-      if (voteType === 1) {
-        await api.upVoteThread(detailThread.id);
-      } else if (voteType === -1) {
-        await api.downVoteThread(detailThread.id);
-      } else {
-        await api.neutralVoteThread(detailThread.id);
-      }
-    } catch (error) {
-      dispatch(
-        asyncShowNotification({
-          message: `Gagal memperbarui vote pada diskusi: ${error.message || 'Terjadi kesalahan server.'}`,
-          type: 'error',
-        })
-      );
-      dispatch(
-        setDetailThreadVotesActionCreator({
-          upVotesBy: previousUpVotesBy,
-          downVotesBy: previousDownVotesBy,
-        })
-      );
-    }
+    await attemptDetailThreadVoteWithRollback(dispatch, {
+      threadId: detailThread.id,
+      voteType,
+      previousUpVotesBy,
+      previousDownVotesBy,
+    });
   };
 }
 
 function asyncToggleVoteComment({ commentId, voteType }) {
   return async (dispatch, getState) => {
     const { authUser, detailThread } = getState();
-    if (!authUser) {
-      dispatch(
-        asyncShowNotification({
-          message: 'Silakan masuk (login) terlebih dahulu untuk memberikan suara pada komentar.',
-          type: 'warning',
-        })
-      );
-      return;
-    }
+    const isAuth = requireAuthOrNotify(
+      dispatch,
+      authUser,
+      'Silakan masuk (login) terlebih dahulu untuk memberikan suara pada komentar.'
+    );
+    if (!isAuth) return;
     if (!detailThread) return;
 
     const currentComment = detailThread.comments.find((c) => c.id === commentId);
@@ -192,29 +243,13 @@ function asyncToggleVoteComment({ commentId, voteType }) {
       })
     );
 
-    try {
-      if (voteType === 1) {
-        await api.upVoteComment({ threadId: detailThread.id, commentId });
-      } else if (voteType === -1) {
-        await api.downVoteComment({ threadId: detailThread.id, commentId });
-      } else {
-        await api.neutralVoteComment({ threadId: detailThread.id, commentId });
-      }
-    } catch (error) {
-      dispatch(
-        asyncShowNotification({
-          message: `Gagal memperbarui vote pada komentar: ${error.message || 'Terjadi kesalahan server.'}`,
-          type: 'error',
-        })
-      );
-      dispatch(
-        setCommentVotesActionCreator({
-          commentId,
-          upVotesBy: previousUpVotesBy,
-          downVotesBy: previousDownVotesBy,
-        })
-      );
-    }
+    await attemptCommentVoteWithRollback(dispatch, {
+      threadId: detailThread.id,
+      commentId,
+      voteType,
+      previousUpVotesBy,
+      previousDownVotesBy,
+    });
   };
 }
 
