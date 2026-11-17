@@ -7,7 +7,7 @@ import useInput from './useInput';
 function useNewThreadPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { authUser } = useSelector((states) => states);
+  const authUser = useSelector((states) => states.authUser);
 
   const [title, handleTitleChange] = useInput('');
   const [category, handleCategoryChange] = useInput('');

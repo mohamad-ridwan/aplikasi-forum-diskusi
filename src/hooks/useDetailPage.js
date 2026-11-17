@@ -11,7 +11,8 @@ import {
 function useDetailPage() {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { detailThread, authUser } = useSelector((states) => states);
+  const detailThread = useSelector((states) => states.detailThread);
+  const authUser = useSelector((states) => states.authUser);
 
   useEffect(() => {
     if (id) {

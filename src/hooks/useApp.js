@@ -5,7 +5,8 @@ import { asyncUnsetAuthUser } from '../states/authUser/action';
 
 function useApp() {
   const dispatch = useDispatch();
-  const { authUser, isPreload } = useSelector((states) => states);
+  const authUser = useSelector((states) => states.authUser);
+  const isPreload = useSelector((states) => states.isPreload);
 
   useEffect(() => {
     dispatch(asyncPreloadProcess());

@@ -4,7 +4,7 @@ import { asyncReceiveLeaderboards } from '../states/leaderboards/action';
 
 function useLeaderboardsPage() {
   const dispatch = useDispatch();
-  const { leaderboards = [] } = useSelector((states) => states);
+  const leaderboards = useSelector((states) => states.leaderboards) || [];
 
   useEffect(() => {
     dispatch(asyncReceiveLeaderboards());

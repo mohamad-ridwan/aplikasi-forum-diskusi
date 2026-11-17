@@ -9,9 +9,10 @@ import { asyncToggleVoteThread } from '../states/threads/action';
 
 function useHomePage() {
   const dispatch = useDispatch();
-  const { threads = [], users = [], authUser, filterCategory } = useSelector(
-    (states) => states
-  );
+  const threads = useSelector((states) => states.threads) || [];
+  const users = useSelector((states) => states.users) || [];
+  const authUser = useSelector((states) => states.authUser);
+  const filterCategory = useSelector((states) => states.filterCategory);
 
   useEffect(() => {
     dispatch(asyncPopulateUsersAndThreads());
