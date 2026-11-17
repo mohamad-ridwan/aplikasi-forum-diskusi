@@ -12,15 +12,21 @@ function useLoginPage() {
   const [password, handlePasswordChange] = useInput('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const onLogin = async () => {
     setIsLoading(true);
-    const result = await dispatch(asyncSetAuthUser({ email, password }));
-    setIsLoading(false);
-
-    if (result && !result.error) {
-      navigate('/');
+    try {
+      const result = await dispatch(asyncSetAuthUser({ email, password }));
+      if (result && !result.error) {
+        navigate('/');
+      }
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onLogin();
   };
 
   const submitButtonText = isLoading ? 'Sedang Masuk...' : 'Masuk Sekarang';
@@ -33,6 +39,7 @@ function useLoginPage() {
     isLoading,
     submitButtonText,
     handleSubmit,
+    onLogin,
   };
 }
 
