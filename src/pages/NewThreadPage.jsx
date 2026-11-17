@@ -1,12 +1,10 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
 import Input from '../components/atoms/Input';
 import Button from '../components/atoms/Button';
 import useNewThreadPage from '../hooks/useNewThreadPage';
 
 function NewThreadPage() {
   const {
-    authUser,
     title,
     handleTitleChange,
     category,
@@ -19,10 +17,6 @@ function NewThreadPage() {
     handleSubmit,
     handleCancel,
   } = useNewThreadPage();
-
-  if (!authUser) {
-    return <Navigate to="/login" replace />;
-  }
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">

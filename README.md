@@ -53,7 +53,7 @@ aplikasi-forum-diskusi/
 ├── src/
 │   ├── assets/              # Aset statis
 │   ├── components/
-│   │   ├── atoms/           # Avatar, Badge, Button, Input, GuestRoute, LoadingBar, Toast
+│   │   ├── atoms/           # Avatar, Badge, Button, Input, GuestRoute, ProtectedRoute, LoadingBar, Toast
 │   │   ├── molecules/       # VoteButton, ThreadItem, CommentItem, CategoryChips
 │   │   └── organisms/       # AppRoutes, NavigationBar, ThreadDetail, CommentInput, LeaderboardList
 │   ├── hooks/               # Custom Hooks: useApp, useInput, useToast, useHomePage, useDetailPage, useLoginPage, useRegisterPage, useNewThreadPage, useLeaderboardsPage
