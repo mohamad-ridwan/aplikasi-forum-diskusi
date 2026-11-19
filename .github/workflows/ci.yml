@@ -4,11 +4,9 @@ on:
   pull_request:
     branches:
       - master
-      - main
   push:
     branches:
       - master
-      - main
 
 jobs:
   automation-test-job:
@@ -21,7 +19,7 @@ jobs:
       - name: Setup Node.js Environment
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
 
       - name: Install Project Dependencies

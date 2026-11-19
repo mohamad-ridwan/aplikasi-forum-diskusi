@@ -13,7 +13,7 @@
     "test:run": "vitest run",
     "e2e": "cypress run",
     "e2e:open": "cypress open",
-    "ci:test": "vitest run && start-server-and-test preview http-get://localhost:4173 e2e",
+    "ci:test": "vitest run && start-server-and-test preview http-get://127.0.0.1:4173 e2e",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },

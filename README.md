@@ -7,8 +7,8 @@ Aplikasi ini dibangun untuk memenuhi seluruh **Kriteria Utama** dan seluruh **Po
 ---
 
 ## 🌐 Deployment URL (Vercel)
-- **Live URL**: `https://aplikasi-forum-diskusi.vercel.app` *(atau URL deployment Vercel aktif Anda)*
-- **Repository GitHub**: Repository dengan branch `master` yang diproteksi.
+- **Live URL**: `https://aplikasi-forum-diskusi-gray.vercel.app`
+- **Repository GitHub**: `https://github.com/mohamad-ridwan/aplikasi-forum-diskusi`
 
 ---
 
